@@ -10,6 +10,7 @@ class Api < Sinatra::Base
   register Sinatra::RespondWith
 
   get '/segtok' do
+    typecast_params!(params)
     text = extract_text(params)
     seg = LLT::Segmenter.new(params)
     tok = LLT::Tokenizer.new(params)
@@ -36,8 +37,9 @@ class Api < Sinatra::Base
   end
 
   def slice_size(sentences, threads)
-    size = sentences.size / threads - 1
-    size < 0 ? (sentences.size - 1) : size
+    sent_size = sentences.size
+    size = sent_size / threads - 1
+    size < sent_size ? sent_size : size
   end
 
   def process_segtok(forked_tok)
