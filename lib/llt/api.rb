@@ -1,5 +1,7 @@
 require 'llt'
 require 'llt/core/api'
+require 'llt/segmenter/api'
+require 'llt/tokenizer/api'
 require 'sinatra/base'
 require 'sinatra/respond_with'
 
