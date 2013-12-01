@@ -27,3 +27,4 @@ platform :jruby do
 end
 
 gem 'pry'
+gem 'array_scanner'
