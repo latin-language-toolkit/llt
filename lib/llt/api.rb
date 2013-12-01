@@ -13,7 +13,7 @@ class Api < Sinatra::Base
     tok = LLT::Tokenizer.new(params)
     sentences = seg.segment(text)
     if sentences.any?
-      threads_count = 4 # use an env var here
+      threads_count = (t = ENV['THREADS_FOR_LLT']) ? t.to_i : 4
       threads = []
       sentences.each_slice(slice_size(sentences, threads_count)) do |sliced|
         threads << Thread.new do
