@@ -13,10 +13,6 @@ describe "main api" do
 
   describe '/segtok' do
     context "with URI as input" do
-      it "responds to GET" do
-        get '/segtok'
-        last_response.should be_ok
-      end
     end
 
     let(:text) {{text: "homo mittit. Marcus est."}}

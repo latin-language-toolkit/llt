@@ -8,12 +8,12 @@ class Api < Sinatra::Base
   register Sinatra::RespondWith
 
   get '/segtok' do
-    text = params[:text].to_s
+    text = extract_text(params)
     seg = LLT::Segmenter.new(params)
     tok = LLT::Tokenizer.new(params)
     sentences = seg.segment(text)
     if sentences.any?
-      threads_count = params[:threads] || 4
+      threads_count = 4 # use an env var here
       threads = []
       sentences.each_slice(slice_size(sentences, threads_count)) do |sliced|
         threads << Thread.new do
@@ -25,7 +25,6 @@ class Api < Sinatra::Base
           end
         end
       end
-
       threads.each(&:join)
     end
 
