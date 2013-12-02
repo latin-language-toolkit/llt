@@ -38,8 +38,8 @@ class Api < Sinatra::Base
 
   def slice_size(sentences, threads)
     sent_size = sentences.size
-    size = sent_size / threads - 1
-    size < sent_size ? sent_size : size
+    size = sent_size / threads + 1
+    size <= 0 ? sent_size : size
   end
 
   def process_segtok(tokenizer)
