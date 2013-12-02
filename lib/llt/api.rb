@@ -42,9 +42,12 @@ class Api < Sinatra::Base
     size < sent_size ? sent_size : size
   end
 
-  def process_segtok(forked_tok)
-    if forked_tok.db.type == :prometheus
+  def process_segtok(tokenizer)
+    if tokenizer.db.type == :prometheus
       StemDatabase::Db.connection_pool.with_connection { yield }
+      # This should NOT be needed, the block above should solve that.
+      # I have no clue why the connections don't close by themselves...
+      StemDatabase::Db.connection.close
     else
       yield
     end
