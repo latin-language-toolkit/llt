@@ -12,7 +12,7 @@ module LLT
       desc: 'path to Tomcat directory to copy the war file to'
     method_option :restart_server, type: :boolean, aliases: '-r',
       desc: 'Works only when -t is given'
-    def deploy()
+    def deploy
       inside BASE_DIR do
         update_gems(llt_gems)
         run_warbler
