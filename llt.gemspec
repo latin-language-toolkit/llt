@@ -24,4 +24,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "simplecov", "~> 0.7"
   spec.add_dependency "llt-segmenter"
   spec.add_dependency "llt-tokenizer"
+  spec.add_dependency "thor"
 end
