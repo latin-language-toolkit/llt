@@ -5,8 +5,8 @@ module LLT
     include Thor::Actions
 
     BASE_DIR = File.expand_path('../../..', __FILE__)
-    desc 'deploy', 'deploys llt as war'
-    method_option :tomcat, aliases: '-t', desc: 'Tomcat directory to copy the war file to'
+    desc 'deploy', 'deploys llt as war after updating all llt gems'
+    method_option :tomcat, aliases: '-t', desc: 'path to Tomcat directory to copy the war file to'
     method_option :restart_server, type: :boolean, aliases: '-r', desc: 'Works only when -t is given'
     def deploy()
       inside BASE_DIR do
