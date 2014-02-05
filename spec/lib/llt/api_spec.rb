@@ -60,6 +60,36 @@ describe "main api" do
           body.should =~ /<w s_n="2" n="2">est<\/w>/
           body.should =~ /<pc s_n="2" n="3">\.<\/pc>/
         end
+
+        it "doesn't break with complex embedded xml elements" do
+          txt = { text: 'Arma <l no="1.1"> virumque cano. Troiae </l> qui primus.' }
+          params = {
+            indexing: true,
+            recursive: true,
+            inline: true,
+            xml: true,
+          }.merge(txt)
+
+          get '/segtok', params,
+            {"HTTP_ACCEPT" => "application/xml"}
+          last_response.should be_ok
+          body = last_response.body
+          elements = [
+            '<w s_n="1" n="1">Arma</w>',
+            '<l no="1.1">',
+            '<w s_n="1" n="2">-que</w>',
+            '<w s_n="1" n="3">virum</w>',
+            '<w s_n="1" n="4">cano</w>',
+            '<pc s_n="1" n="5">.</pc>',
+            '<w s_n="2" n="1">Troiae</w>',
+            '</l>',
+            '<w s_n="2" n="2">qui</w>',
+            '<w s_n="2" n="3">primus</w>',
+            '<pc s_n="2" n="4">.</pc>'
+          ]
+
+          body.should =~ /#{elements.join}/
+        end
       end
     end
   end
