@@ -12,11 +12,14 @@ module LLT
       desc: 'path to Tomcat directory to copy the war file to'
     method_option :restart_server, type: :boolean, aliases: '-r',
       desc: 'Works only when -t is given'
+    method_option :seed, aliases: '-s',
+     desc: 'Reseeds the prometheus stem database'
     def deploy
       inside BASE_DIR do
         update_gems(llt_gems)
         run_warbler
         deploy_to_tomcat(options)
+        reseed_prometheus_stems(options)
       end
     end
 
@@ -54,6 +57,13 @@ module LLT
         say_status(:restarting, '')
         system("#{bin_dir}/shutdown.sh")
         system("#{bin_dir}/startup.sh")
+      end
+
+      def reseed_prometheus_stems(options)
+        if options[:seed]
+          say_status(:seeding, 'Prometheus stem database')
+          system('rake db:prometheus:seed')
+        end
       end
     end
   end
