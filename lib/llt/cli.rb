@@ -15,6 +15,8 @@ module LLT
     method_option :seed, aliases: '-s',
      desc: 'Reseeds the prometheus stem database'
     def deploy
+      check_ruby_version
+
       inside BASE_DIR do
         update_gems(llt_gems)
         run_warbler
@@ -63,6 +65,13 @@ module LLT
         if options[:seed]
           say_status(:seeding, 'Prometheus stem database')
           system('rake db:prometheus:seed')
+        end
+      end
+
+      def check_ruby_version
+        unless RUBY_ENGINE == 'jruby'
+          say_status(:ABORTING, 'Please use jruby for deployment', :red)
+          exit
         end
       end
     end
