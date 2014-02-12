@@ -38,6 +38,7 @@ module LLT
 
       def run_warbler
         say_status('warbling', '')
+        # a safety measure, because warbler is not an official part of the gem
         Bundler.with_clean_env { system 'warble' }
       end
 
