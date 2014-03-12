@@ -42,7 +42,7 @@ module LLT
 
       def deploy_to_tomcat(options)
         if tomcat = options[:tomcat]
-          system(%{curl --upload-file #{war_name} "http://#{tomcat}/manager/text/deploy?path=/#{program_name}&update=true"})
+          system(%{curl --upload-file #{war_name} "http://#{tomcat}/manager/deploy?path=/#{program_name}&update=true"})
         end
       end
 
