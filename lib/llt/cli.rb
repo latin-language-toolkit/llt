@@ -64,8 +64,13 @@ module LLT
       def reseed_prometheus_stems(options)
         if options[:seed]
           say_status(:seeding, 'Prometheus stem database')
-          system('rake db:prometheus:seed')
+          host = extract_hostname(options[:tomcat])
+          system("rake db:prometheus:seed[#{host}, '-w']")
         end
+      end
+
+      def extract_hostname(str)
+        str.to_s.scan(/@(.*?):\d+$/)[1] || 'localhost'
       end
 
       def check_ruby_version
