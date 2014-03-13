@@ -8,11 +8,9 @@ module LLT
     BASE_DIR = File.expand_path('../../..', __FILE__)
 
     desc 'deploy', 'deploys llt as war after updating all llt gems'
-    method_option :tomcat, aliases: '-t',
-      desc: 'path to Tomcat directory to copy the war file to'
-    method_option :restart_server, type: :boolean, aliases: '-r',
-      desc: 'Works only when -t is given'
-    method_option :seed, aliases: '-s',
+    method_option :tomcat, aliases: '-t', type: :string,
+      desc: 'Remote deployment to a Tomcat server: <user>:<password>@<hostname>:<port>'
+    method_option :seed, aliases: '-s', type: :boolean,
      desc: 'Reseeds the prometheus stem database'
     def deploy
       check_ruby_version
@@ -44,15 +42,16 @@ module LLT
 
       def deploy_to_tomcat(options)
         if tomcat = options[:tomcat]
-          app_dir = File.join(tomcat, 'webapps')
-          say_status(:copying, "#{war_name} => #{app_dir}")
-          system("cp #{war_name} #{app_dir}")
-          restart(tomcat) if options[:restart_server]
+          system(%{curl --upload-file #{war_name} "http://#{tomcat}/manager/deploy?path=/#{program_name}&update=true"})
         end
       end
 
       def war_name
         "llt.war"
+      end
+
+      def program_name
+        war_name.chomp('.war')
       end
 
       def restart(tomcat)
@@ -65,8 +64,13 @@ module LLT
       def reseed_prometheus_stems(options)
         if options[:seed]
           say_status(:seeding, 'Prometheus stem database')
-          system('rake db:prometheus:seed')
+          host = extract_hostname(options[:tomcat])
+          system("rake db:prometheus:seed[#{host}, '-w']")
         end
+      end
+
+      def extract_hostname(str)
+        str.to_s.scan(/@(.*?):\d+$/)[1] || 'localhost'
       end
 
       def check_ruby_version
