@@ -31,6 +31,8 @@ class Api < Sinatra::Base
       threads.each(&:join)
     end
 
+    params.merge!(root: 'llt-segtok') # add info here about the service itself?
+
     respond_to do |f|
       f.xml { to_xml(sentences, params) }
     end
