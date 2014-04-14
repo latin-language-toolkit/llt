@@ -7,6 +7,7 @@ require 'sinatra/respond_with'
 
 class Api < Sinatra::Base
   helpers LLT::Core::Api::Helpers
+  register LLT::Core::Api::VersionRoutes
   register Sinatra::RespondWith
 
   get '/segtok' do
@@ -37,6 +38,8 @@ class Api < Sinatra::Base
       f.xml { to_xml(sentences, params) }
     end
   end
+
+  add_version_route_for('/segtok', dependencies: %i{ Core Segmenter Tokenizer })
 
   def slice_size(sentences, threads)
     sent_size = sentences.size
