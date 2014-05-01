@@ -26,5 +26,4 @@ platform :jruby do
   gem 'jruby-httpclient'
 end
 
-gem 'pry'
 gem 'array_scanner'
