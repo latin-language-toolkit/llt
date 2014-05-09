@@ -12,9 +12,9 @@ class Api < Sinatra::Base
 
   get '/segtok' do
     typecast_params!(params)
-    tei_nodes_to_ignore = params[:ignore_tei]
+    tei_nodes_to_remove = params[:remove_tei]
     text = extract_text(params)
-    text = preprocess_tei(text, tei_nodes_to_ignore) if tei_nodes_to_ignore
+    text = preprocess_tei(text, tei_nodes_to_remove) if tei_nodes_to_remove
 
     seg = LLT::Segmenter.new(params)
     tok = LLT::Tokenizer.new(params)
@@ -44,9 +44,9 @@ class Api < Sinatra::Base
 
   add_version_route_for('/segtok', dependencies: %i{ Core Segmenter Tokenizer })
 
-  def preprocess_tei(text, nodes_to_ignore)
+  def preprocess_tei(text, nodes_to_remove)
     preprocessor = LLT::TeiHandler::PreProcessor.new(text)
-    preprocessor.ignore_nodes(*nodes_to_ignore)
+    preprocessor.remove_nodes(*nodes_to_remove)
     preprocessor.to_xml
   end
 
