@@ -1,5 +1,6 @@
 require 'llt'
 require 'llt/core/api'
+require 'llt/review/api'
 require 'llt/segmenter/api'
 require 'llt/tokenizer/api'
 require 'sinatra/base'
