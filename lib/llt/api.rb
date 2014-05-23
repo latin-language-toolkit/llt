@@ -19,22 +19,31 @@ class Api < Sinatra::Base
 
     seg = LLT::Segmenter.new(params)
     tok = LLT::Tokenizer.new(params)
+
+    # Let's disable threading for now. It breaks the test. Could have just been
+    # an update to rack-test or something like that, which caused it.
+    # Have to go back in history to see when the error exactly occurs (sadly,
+    # Travis wasn't running in this repository...) and maybe use an older
+    # version of the causing gem.
     sentences = seg.segment(text)
-    if sentences.any?
-      threads_count = (t = ENV['THREADS_FOR_LLT']) ? t.to_i : 4
-      threads = []
-      sentences.each_slice(slice_size(sentences, threads_count)) do |sliced|
-        threads << Thread.new do
-          forked_tok = tok.fork_instance
-          process_segtok(forked_tok) do
-            sliced.each do |sentence|
-              forked_tok.tokenize(sentence.to_s, add_to: sentence)
-            end
-          end
-        end
-      end
-      threads.each(&:join)
+    sentences.each do |sentence|
+      tok.tokenize(sentence.to_s, add_to: sentence)
     end
+    #if sentences.any?
+      #threads_count = (t = ENV['THREADS_FOR_LLT']) ? t.to_i : 4
+      #threads = []
+      #sentences.each_slice(slice_size(sentences, threads_count)) do |sliced|
+        #threads << Thread.new do
+          #forked_tok = tok.fork_instance
+          #process_segtok(forked_tok) do
+            #sliced.each do |sentence|
+              #forked_tok.tokenize(sentence.to_s, add_to: sentence)
+            #end
+          #end
+        #end
+      #end
+      #threads.each(&:join)
+    #end
 
     params.merge!(root: 'llt-segtok') # add info here about the service itself?
 
