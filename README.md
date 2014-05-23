@@ -1,5 +1,7 @@
 # LLT
 
+[![Build Status](http://allthebadges.io/latin-language-toolkit/llt/travis.png)](http://allthebadges.io/latin-language-toolkit/llt/travis)
+
 TODO: Write a gem description
 
 ## Installation
