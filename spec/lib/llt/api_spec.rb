@@ -61,6 +61,25 @@ describe "main api" do
           body.should =~ /<pc s_n="2" n="3">\.<\/pc>/
         end
 
+        it "receives params in post for tokenization and markup" do
+          params = {
+            indexing: true,
+            recursive: true,
+            inline: true,
+          }.merge(text)
+
+          post '/segtok', params,
+            {"HTTP_ACCEPT" => "application/xml"}
+          last_response.should be_ok
+          body = last_response.body
+          body.should =~ /<w s_n="1" n="1">homo<\/w>/
+          body.should =~ /<w s_n="1" n="2">mittit<\/w>/
+          body.should =~ /<pc s_n="1" n="3">\.<\/pc>/
+          body.should =~ /<w s_n="2" n="1">Marcus<\/w>/
+          body.should =~ /<w s_n="2" n="2">est<\/w>/
+          body.should =~ /<pc s_n="2" n="3">\.<\/pc>/
+        end
+
         it "doesn't break with complex embedded xml elements" do
           txt = { text: 'Arma <l no="1.1"> virumque cano. Troiae </l> qui primus.' }
           params = {
