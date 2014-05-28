@@ -18,12 +18,15 @@ class Api < Sinatra::Base
   get '/segtok' do
     parse_request
   end
-  
+
   def parse_request
     typecast_params!(params)
-    tei_nodes_to_remove = params[:remove_tei]
     text = extract_text(params)
-    text = preprocess_tei(text, tei_nodes_to_remove) if tei_nodes_to_remove
+
+    if params[:xml]
+      tei_nodes_to_remove = params[:remove_tei]
+      text = preprocess_tei(text, tei_nodes_to_remove) if tei_nodes_to_remove
+    end
 
     seg = LLT::Segmenter.new(params)
     tok = LLT::Tokenizer.new(params)
