@@ -32,14 +32,13 @@ describe "main api" do
 
       context "with accept header xml" do
         it "segtoks the given text" do
-          pending
           get '/segtok', text,
             {"HTTP_ACCEPT" => "application/xml"}
           last_response.should be_ok
           body = last_response.body
-          body.should =~ /<w>homo<\/w>/
-          body.should =~ /<w>mittit<\/w>/
-          body.should =~ /<pc>\.<\/pc>/
+          body.should =~ /<w n="1">homo<\/w>/
+          body.should =~ /<w n="2">mittit<\/w>/
+          body.should =~ /<pc n="3">\.<\/pc>/
         end
 
         it "receives params for tokenization and markup" do
