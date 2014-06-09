@@ -16,6 +16,7 @@ describe "main api" do
     end
 
     let(:text) {{text: "homo mittit. Marcus est."}}
+    let(:html_text) {{text: "&#954;&#945;&#953;."}}
 
     context "with text as input" do
       context "with accept header json" do
@@ -39,6 +40,15 @@ describe "main api" do
           body.should =~ /<w n="1">homo<\/w>/
           body.should =~ /<w n="2">mittit<\/w>/
           body.should =~ /<pc n="3">\.<\/pc>/
+        end
+
+        it "segtoks the given greek texts with unescaping html entities" do
+          get '/segtok', html_text,
+            {"HTTP_ACCEPT" => "application/xml"}
+          last_response.should be_ok
+          body = last_response.body
+          body.should =~ /<w n="1">και<\/w>/
+          body.should =~ /<pc n="2">\.<\/pc>/
         end
 
         it "receives params for tokenization and markup" do
