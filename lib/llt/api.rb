@@ -23,10 +23,7 @@ class Api < Sinatra::Base
     typecast_params!(params)
     text = extract_text(params)
 
-    if params[:xml]
-      tei_nodes_to_remove = params[:remove_tei]
-      text = preprocess_tei(text, tei_nodes_to_remove) if tei_nodes_to_remove
-    end
+    text = preprocess_xml(text, params) if params[:xml]
 
     seg = LLT::Segmenter.new(params)
     tok = LLT::Tokenizer.new(params)
@@ -65,10 +62,17 @@ class Api < Sinatra::Base
 
   add_version_route_for('/segtok', dependencies: %i{ Core Segmenter Tokenizer })
 
-  def preprocess_tei(text, nodes_to_remove)
-    preprocessor = LLT::TeiHandler::PreProcessor.new(text)
-    preprocessor.remove_nodes(*nodes_to_remove)
-    preprocessor.to_xml
+  def preprocess_xml(text, params)
+    root = params[:go_to_root]
+    nodes_to_remove = params[:remove_node]
+    if root || nodes_to_remove
+      kws = { root: root, ns: params[:ns] }
+      preprocessor = LLT::XmlHandler::PreProcessor.new(text, kws)
+      preprocessor.remove_nodes(*nodes_to_remove)
+      preprocessor.to_xml
+    else
+      text
+    end
   end
 
   def slice_size(sentences, threads)
