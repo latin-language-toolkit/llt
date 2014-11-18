@@ -43,12 +43,17 @@ module LLT
 
     no_commands do
       def run_test(name, test)
+        start = Time.now
         actual = test_response(name, test)
+        ending = Time.now
+
         expected = File.read(File.join(TEST_DIR, test['result']))
+        time_elapsed = (ending - start).round(2)
 
         color = actual == expected ? :green : :red
         params = test['params'].map { |k, v| "#{k}: #{v}" }.join(', ')
-        say_status(name, "#{test['method'].upcase} - #{params}", color)
+        message = "#{test['method'].upcase} - #{params}\t(#{time_elapsed}s)"
+        say_status(name, message, color)
       end
 
       def test_response(name, test)
