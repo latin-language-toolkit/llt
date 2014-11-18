@@ -47,7 +47,8 @@ module LLT
         expected = File.read(File.join(TEST_DIR, test['result']))
 
         color = actual == expected ? :green : :red
-        say_status name, "#{test['method'].upcase} #{test['params']}", color
+        params = test['params'].map { |k, v| "#{k}: #{v}" }.join(', ')
+        say_status(name, "#{test['method'].upcase} - #{params}", color)
       end
 
       def test_response(name, test)
