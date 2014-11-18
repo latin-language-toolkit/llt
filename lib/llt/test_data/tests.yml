@@ -1,0 +1,21 @@
+tokenize:
+  - params:
+      text: Arma virumque cano.
+      shifting: false
+    method: get
+    response: tokenize1.xml
+
+segtok:
+  - params:
+      text: Arma virumque cano.
+      shifting: false
+    method: get
+    response: segtok1.xml
+
+  - params:
+      text: Arma virumque cano.
+      shifting: false
+      inline: true
+    method: get
+    response: segtok2.xml
+
