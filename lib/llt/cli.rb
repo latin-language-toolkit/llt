@@ -44,7 +44,7 @@ module LLT
     no_commands do
       def run_test(name, test)
         actual = test_response(name, test)
-        expected = File.read(File.join(TEST_DIR, test['response']))
+        expected = File.read(File.join(TEST_DIR, test['result']))
 
         color = actual == expected ? :green : :red
         say_status name, "#{test['method'].upcase} #{test['params']}", color
