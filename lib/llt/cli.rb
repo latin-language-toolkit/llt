@@ -1,5 +1,7 @@
 require 'thor'
 require 'bundler'
+require 'net/http'
+require 'yaml'
 
 module LLT
   class CLI < Thor
@@ -28,7 +30,32 @@ module LLT
       end
     end
 
+    TEST_DIR = File.expand_path('../test_data', __FILE__)
+    TESTS = YAML.load(File.read(File.join(TEST_DIR, 'tests.yml')))
+
+    desc 'test ADDRESS', 'Tests if deployment was successful and the server responds fine'
+    def test(address)
+      @address = address
+      TESTS.each do |name, tests|
+        tests.each { |test| run_test(name, test) }
+      end
+    end
+
     no_commands do
+      def run_test(name, test)
+        actual = test_response(name, test)
+        expected = File.read(File.join(TEST_DIR, test['response']))
+
+        color = actual == expected ? :green : :red
+        say_status name, "#{test['method'].upcase} #{test['params']}", color
+      end
+
+      def test_response(name, test)
+        uri = URI.parse("#{@address}/#{name}")
+        uri.query = URI.encode_www_form(test['params'])
+        Net::HTTP.send(test['method'], uri)
+      end
+
       def update_bundle
         say_status('updating', 'trough bundle update')
         `bundle update`
