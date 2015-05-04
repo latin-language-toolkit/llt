@@ -19,6 +19,14 @@ psql
 
     create user prometheus with password 'admin'
     alter user prometheus with createdb
+    create database prometheus
+    \q
+
+N.B. on using the Rake tasks for the DB:
+
+* the rake tasks are for localhost. You will need to update the tasks.rb to change the hostname if you aren't installing on localhost
+
+
 
 rake db:prometheus:create -h [hostname]
 
