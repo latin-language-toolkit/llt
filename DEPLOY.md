@@ -8,6 +8,24 @@ Postgresql
 
 Tomcat 6
 
+# Get the LLT code
+
+git clone https://github.com/latin-language-toolkit/llt
+
+cd llt
+
+bundle
+
+gem install llt
+
+# Install warbler
+
+gem install warble
+
+# Build the war
+
+warble
+
 # Get LLT Db handler code and install the db
 git clone https://github.com/latin-language-toolkit/llt-db_handler
 
@@ -32,25 +50,9 @@ rake db:prometheus:create -h [hostname]
 
 rake db:prometheus:seed -h [hostname]
 
-# Get the LLT code
-
-git clone https://github.com/latin-language-toolkit/llt
-
-cd llt
-
-bundle
-
-gem install llt
-
-# Install warbler
-
-gem install warble
-
-# Build the war
-
-warble
-
 # Deploy the war
+
+(Back in the llt directory)
 
 curl --upload-file llt.war "http://admin:PASSWORD@http://hostname:8080/manager/deploy?path=/llt&update=true"
 
