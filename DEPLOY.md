@@ -24,6 +24,8 @@ gem install warbler
 
 # Build the war
 
+export JRUBY_OPTS=--2.0
+
 warble
 
 # Get LLT Db handler code and install the db
