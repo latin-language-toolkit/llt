@@ -17,13 +17,12 @@ su - postgres
 
 psql
 
-  create user prometheus with password 'admin'
+    create user prometheus with password 'admin'
+    alter user prometheus with createdb
 
-  alter user prometheus with createdb
+rake db:prometheus:create -h [hostname]
 
-rake db:prometheus:create [hostname]
-
-rake db:prometheus:seed [hostname]
+rake db:prometheus:seed -h [hostname]
 
 # Get the LLT code
 
