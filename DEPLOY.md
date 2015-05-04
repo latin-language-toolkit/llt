@@ -20,7 +20,7 @@ gem install llt
 
 # Install warbler
 
-gem install warble
+gem install warbler
 
 # Build the war
 
