@@ -66,4 +66,4 @@ curl --upload-file llt.war "http://admin:PASSWORD@http://hostname:8080/manager/d
 
 # Troubleshooting
 
-If you get an error about an invalid multibyte sequence when you deploy the war, you probably didn't have the JRUBY_OPTS set right before building the llt gem and war.  
+If you get an error about an invalid multibyte sequence when you deploy the war make sure tomcat is set to run with LANG=UTF-8 (e.g. via JAVA_OPTS=-Dfile.encoding=UTF-8)
