@@ -5,6 +5,7 @@ require 'llt/segmenter/api'
 require 'llt/tokenizer/api'
 require 'sinatra/base'
 require 'sinatra/respond_with'
+require 'cgi'
 
 class Api < Sinatra::Base
   helpers LLT::Core::Api::Helpers
@@ -33,7 +34,13 @@ class Api < Sinatra::Base
     # Have to go back in history to see when the error exactly occurs (sadly,
     # Travis wasn't running in this repository...) and maybe use an older
     # version of the causing gem.
-    sentences = seg.segment(text)
+
+    # Unescaping HTML chars: During work on greek segmenter it turned out that
+    # the parsed Herodotus xml file returned HTML characters instead of UTF-8,
+    # which caused problems in segmenting.
+    # CGI.unescapeHTML converts those into UTF-8.
+    unescaped_text = CGI.unescapeHTML(text)
+    sentences = seg.segment(unescaped_text)
     sentences.each do |sentence|
       tok.tokenize(sentence.to_s, add_to: sentence)
     end
